@@ -52,14 +52,13 @@ public class PageController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> Signup(@RequestBody Signup req) {
-
+		
 		Users u = new Users();
 		u.setName(req.getName());
 		u.setEmail(req.getEmail());
 		u.setPassword(req.getPassword());
 		u.setPhone(req.getPhone());
-		u.setAddressid(req.getAddress());
-		
+//		u.setAddressid(req.getAddress());
 		SignupResp signResp = new SignupResp();
 		try {
 			if (hibernate.checkEmail(req.getEmail()) == true) {
