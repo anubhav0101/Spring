@@ -59,6 +59,7 @@ public class PageController {
 		u.setPassword(req.getPassword());
 		u.setPhone(req.getPhone());
 //		u.setAddressid(req.getAddress());
+		System.out.println("hello anubhav");
 		SignupResp signResp = new SignupResp();
 		try {
 			if (hibernate.checkEmail(req.getEmail()) == true) {
