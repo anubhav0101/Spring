@@ -125,7 +125,6 @@ public class HibernateUtils {
 			else {
 				return true;
 			}
-
 		} catch (Exception e) {
 			throw e;
 		}
@@ -143,7 +142,6 @@ public class HibernateUtils {
 		} catch (Exception e) {
 			throw e;
 		}
-
 	}
 
 }

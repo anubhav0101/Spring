@@ -9,11 +9,13 @@ private String name;
 private String email;
 private String password;
 private Long Phone;
-private Address address;
-public Address getAddress() {
+private AddressReq address;
+
+public AddressReq getAddress() {
 	return address;
 }
-public void setAddress(Address address) {
+
+public void setAddress(AddressReq address) {
 	this.address = address;
 }
 public Long getPhone() {

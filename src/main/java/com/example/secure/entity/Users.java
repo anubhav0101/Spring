@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,7 +15,6 @@ public class Users {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	private Integer id;
 	@Column(name="name")
 	private String name;
@@ -23,16 +22,15 @@ public class Users {
 	private String email;
 	@Column(name="phone")
 	private Long phone;
-	@ManyToOne
-	@JoinColumn(name="address_id")
-	private Address addressid;
-	
-
-	public Address getAddressid() {
-		return addressid;
+	private String password;
+	@OneToOne
+	@JoinColumn(name="address")
+	private Address address;
+	public Address getAddress() {
+		return address;
 	}
-	public void setAddressid(Address addressid) {
-		this.addressid = addressid;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 	public Long getPhone() {
 		return phone;
@@ -64,5 +62,5 @@ public class Users {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	private String password;
+	
 }

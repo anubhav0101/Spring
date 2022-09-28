@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.secure.dao.HibernateUtils;
+import com.example.secure.entity.Address;
 import com.example.secure.entity.Users;
 import com.example.secure.request.Loginreq;
 import com.example.secure.request.LogoutReq;
@@ -58,17 +59,20 @@ public class PageController {
 		u.setEmail(req.getEmail());
 		u.setPassword(req.getPassword());
 		u.setPhone(req.getPhone());
-//		u.setAddressid(req.getAddress());
-		System.out.println("hello anubhav");
+		Address a=new Address();
+		a.setCity(req.getAddress().getCity());
+		a.setState(req.getAddress().getState());
+		a.setStreet(req.getAddress().getStreet());
+		a.setPincode(req.getAddress().getPin());
 		SignupResp signResp = new SignupResp();
 		try {
 			if (hibernate.checkEmail(req.getEmail()) == true) {
-
 				signResp.setId(u.getId());
 				signResp.setMessage("Email already exists");
 			}
 		} catch (Exception e) {
-
+			hibernate.save(a);
+			u.setAddress(a);
 			hibernate.save(u);
 			signResp.setId(u.getId());
 			if (u.getId() == null)
@@ -88,7 +92,8 @@ public class PageController {
 			logoutResp.setMessage("please send id");
 		else {
 		hibernate.delete(hibernate.findEntityById(u, req.getId()));
-		logoutResp.setMessage("deleted");}
+		logoutResp.setMessage("deleted");
+		}
 		return new ResponseEntity<LogoutResp>(logoutResp, HttpStatus.OK);
 	}
 
@@ -110,6 +115,7 @@ public class PageController {
 		pf.setId(prof.getId());
 		pf.setName(prof.getName());
 		pf.setEmail(prof.getEmail());
+//		pf.setAddress(prof.getAddressid());
 		return new ResponseEntity<ProfileResponse>(pf, HttpStatus.OK);
 	}
 

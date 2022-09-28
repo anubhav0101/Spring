@@ -1,13 +1,21 @@
 package com.example.secure.response;
 
+import com.example.secure.entity.Address;
+
 public class ProfileResponse {
 	private  Integer id;
 	private String name;
 	private String email;
-//	private Long phone;
-//	private String address;
+	private Long phone;
+	private Address address;
 
 	
+	public Address getAddress() {
+		return address;
+	}
+	public void setAddress(Address address) {
+		this.address = address;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -26,18 +34,13 @@ public class ProfileResponse {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-//	public Long getPhone() {
-//		return phone;
-//	}
-//	public void setPhone(Long phone) {
-//		this.phone = phone;
-//	}
-//	public String getAddress() {
-//		return address;
-//	}
-//	public void setAddress(String address) {
-//		this.address = address;
-//	}
+	public Long getPhone() {
+		return phone;
+	}
+	public void setPhone(Long phone) {
+		this.phone = phone;
+	}
+
 
 
 }
