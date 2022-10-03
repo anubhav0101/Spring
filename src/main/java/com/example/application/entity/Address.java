@@ -1,11 +1,10 @@
-package com.example.secure.entity;
+package com.example.application.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -24,7 +23,6 @@ public class Address {
 	private String state;
 	@Column(name="pin")
 	private Integer pincode;
-	
 	
 	public Integer getId() {
 		return id;
@@ -56,6 +54,4 @@ public class Address {
 	public void setPincode(Integer pincode) {
 		this.pincode = pincode;
 	}
-	
-	
 }

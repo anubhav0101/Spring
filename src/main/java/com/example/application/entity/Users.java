@@ -1,4 +1,4 @@
-package com.example.secure.entity;
+package com.example.application.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="users")
@@ -18,10 +19,12 @@ public class Users {
 	private Integer id;
 	@Column(name="name")
 	private String name;
+	@NotNull
 	@Column(name="email")
 	private String email;
 	@Column(name="phone")
 	private Long phone;
+	@NotNull
 	private String password;
 	@OneToOne
 	@JoinColumn(name="address")

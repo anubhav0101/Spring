@@ -1,4 +1,4 @@
-package com.example.secure.response;
+package com.example.application.response;
 
 public class LogoutResp {
 

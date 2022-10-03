@@ -1,6 +1,5 @@
-package com.example.secure.request;
+package com.example.application.request;
 
-import com.example.secure.entity.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties 

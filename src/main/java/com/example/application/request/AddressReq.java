@@ -1,5 +1,8 @@
-package com.example.secure.request;
+package com.example.application.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties
 public class AddressReq {
 
 	private String street;

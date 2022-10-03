@@ -1,4 +1,4 @@
-package com.example.secure.request;
+package com.example.application.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

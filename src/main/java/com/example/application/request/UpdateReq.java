@@ -1,21 +1,17 @@
-package com.example.secure.response;
+package com.example.application.request;
 
-import com.example.secure.entity.Address;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public class ProfileResponse {
+@JsonIgnoreProperties 
+public class UpdateReq {
+	
 	private  Integer id;
 	private String name;
 	private String email;
 	private Long phone;
-	private Address address;
+	private AddressReq address;
 
 	
-	public Address getAddress() {
-		return address;
-	}
-	public void setAddress(Address address) {
-		this.address = address;
-	}
 	public Integer getId() {
 		return id;
 	}
@@ -40,7 +36,12 @@ public class ProfileResponse {
 	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
-
+	public AddressReq getAddress() {
+		return address;
+	}
+	public void setAddress(AddressReq address) {
+		this.address = address;
+	}
 
 
 }

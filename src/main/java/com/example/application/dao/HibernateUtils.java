@@ -1,4 +1,4 @@
-package com.example.secure.dao;
+package com.example.application.dao;
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,7 +9,9 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.example.secure.entity.Users;
+import com.example.application.entity.Products;
+import com.example.application.entity.Subcategory;
+import com.example.application.entity.Users;
 
 
 @Repository
@@ -143,5 +145,63 @@ public class HibernateUtils {
 			throw e;
 		}
 	}
+	public boolean checkProduct(String name) {
+		Products products;
+		try (Session session = sessionFactory.openSession()) {
+		String hql = "FROM Products WHERE Name =: name";
+		Query query = session.createQuery(hql);
+		query.setParameter("name",name);
+		products = (Products) query.getSingleResult();
+			if(products==null) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	public Products productByName(String name) {
+		Products products;
+		try (Session session = sessionFactory.openSession()) {
+			String hql = "FROM Products WHERE Name =: name";
+			Query query = session.createQuery(hql);
+			query.setParameter("name",name);
+			products = (Products) query.getSingleResult();
+			return products;
 
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	public boolean checkSubcategorybyname(String name) {
+		Subcategory subcategory;
+		try (Session session = sessionFactory.openSession()) {
+		String hql = "FROM Subcategory WHERE Name =: name";
+		Query query = session.createQuery(hql);
+		query.setParameter("name",name);
+		subcategory = (Subcategory) query.getSingleResult();
+			if(subcategory==null) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	public Subcategory getSubcategorybyname(String name) {
+		Subcategory subcategory;
+		try (Session session = sessionFactory.openSession()) {
+		String hql = "FROM Subcategory WHERE Name =: name";
+		Query query = session.createQuery(hql);
+		query.setParameter("name",name);
+		subcategory = (Subcategory) query.getSingleResult();
+			return subcategory;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 }
