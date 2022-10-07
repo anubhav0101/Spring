@@ -1,8 +1,11 @@
 package com.example.application.service;
 
+import java.io.IOException;
+
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.example.application.dao.HibernateUtils;
@@ -29,7 +32,7 @@ public class PageService {
 		ResultResp resultResp = new ResultResp();
 		try {
 			if (hibernate.checkEmail(email) == true) {
-			
+
 				Users user = hibernate.userByEmail(email);
 				if (user.getPassword().equals(req.getPassword())) {
 					resultResp.setResult("Success");
@@ -44,13 +47,13 @@ public class PageService {
 		return resultResp;
 	}
 
-	public ResponseEntity<?> signup(Signup req) {
+	public SignupResp signup(Signup req) throws IOException {
 		Users u = new Users();
 		SignupResp signResp = new SignupResp();
-		if (req.getEmail() == null||req.getPassword()==null) {
-			signResp.setMessage("Email and password are required field");
-		return new ResponseEntity<SignupResp>(signResp, HttpStatus.BAD_REQUEST);
-		} 
+//		if (req.getEmail() == null||req.getPassword()==null) {
+//			signResp.setMessage("Email and password are required field");
+//		return new ResponseEntity<SignupResp>(signResp, HttpStatus.BAD_REQUEST);
+//		} 
 		u.setName(req.getName());
 		u.setEmail(req.getEmail());
 		u.setPassword(req.getPassword());
@@ -60,32 +63,32 @@ public class PageService {
 		a.setState(req.getAddress().getState());
 		a.setStreet(req.getAddress().getStreet());
 		a.setPincode(req.getAddress().getPin());
-		
+
 		try {
-			if (hibernate.checkEmail(req.getEmail()) == true) {
-				signResp.setMessage("Email already exists");
-				return new ResponseEntity<SignupResp>(signResp, HttpStatus.NOT_ACCEPTABLE);
-			}
-		} catch (Exception e) {
+			if (hibernate.checkEmail(req.getEmail()) == true)
+
+				throw new IOException("IOException Occurred");
+
+		} catch (EmptyResultDataAccessException e) {
+
 			hibernate.save(a);
 			u.setAddress(a);
 			hibernate.save(u);
 			signResp.setId(u.getId());
 			signResp.setMessage("User created");
 		}
-		return new ResponseEntity<SignupResp>(signResp, HttpStatus.OK);
+		return signResp;
 	}
 
-	public LogoutResp delete(LogoutReq req) {
+	public ResultResp delete(LogoutReq req) {
 		Users u = new Users();
-		LogoutResp logoutResp = new LogoutResp();
-		if (req.getId() == null)
-			logoutResp.setMessage("please send id");
-		else {
-			hibernate.delete(hibernate.findEntityById(u, req.getId()));
-			logoutResp.setMessage("deleted");
-		}
-		return logoutResp;
+		ResultResp resultResp = new ResultResp();
+//		if (req.getId() == null)
+//			logoutResp.setMessage("please send id");
+		hibernate.delete(hibernate.findEntityById(u, req.getId()));
+		resultResp.setResult("deleted");
+
+		return resultResp;
 	}
 
 	public LogoutResp logout(LogoutReq req) {
@@ -96,7 +99,6 @@ public class PageService {
 	}
 
 	public ProfileResponse getprofileById(Integer id) {
-
 		Users u = new Users();
 		Users prof = hibernate.findEntityById(u, id);
 		ProfileResponse pf = new ProfileResponse();
@@ -105,28 +107,24 @@ public class PageService {
 		pf.setEmail(prof.getEmail());
 		pf.setPhone(prof.getPhone());
 		pf.setAddress(prof.getAddress());
-
 		return pf;
 
 	}
 
-	public UpdateResp updateProfile(UpdateReq upreq) {
+	public UpdateResp updateProfile(UpdateReq upreq) throws IOException {
 		Users u = new Users();
 		UpdateResp upresp = new UpdateResp();
-		if (upreq.getId() == null) {
+		
 
-			upresp.setResult("Id is Required");
-			return upresp;
-		}
-
-			u.setId(upreq.getId());
-			Users ur = hibernate.findEntityById(u, upreq.getId());
-			u.setName(upreq.getName());
-			try{if(hibernate.checkEmail(upreq.getEmail()) == true) {
-				upresp.setResult("Email already exists");
-				return upresp;}
+		u.setId(upreq.getId());
+		Users ur = hibernate.findEntityById(u, upreq.getId());
+		u.setName(upreq.getName());
+		try {
+			if (hibernate.checkEmail(upreq.getEmail()) == true||hibernate.findEntityById(ur,upreq.getId())==null) {
+			throw new IOException("IOException Occurred");
 			}
-			catch(Exception e) {u.setEmail(upreq.getEmail());
+		} catch (EmptyResultDataAccessException e) {
+			u.setEmail(upreq.getEmail());
 			u.setPhone(upreq.getPhone());
 			u.setPassword(ur.getPassword());
 			Address ad = new Address();
@@ -138,7 +136,8 @@ public class PageService {
 			hibernate.update(ad);
 			u.setAddress(ad);
 			hibernate.update(u);
-			upresp.setResult("Updated");}
+			upresp.setResult("Updated");
+		}
 
 		return upresp;
 	}

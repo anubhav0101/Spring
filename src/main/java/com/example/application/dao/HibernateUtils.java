@@ -9,6 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.application.entity.Product_subcategory;
 import com.example.application.entity.Products;
 import com.example.application.entity.Subcategory;
 import com.example.application.entity.Users;
@@ -73,6 +74,7 @@ public class HibernateUtils {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T findEntityById(T entity, Serializable id) {
 		Session session = getSession();
 		try {
@@ -175,6 +177,19 @@ public class HibernateUtils {
 			throw e;
 		}
 	}
+	public Products productByCategory(String category) {
+		Products products;
+		try (Session session = sessionFactory.openSession()) {
+			String hql = "FROM Products WHERE Category =: category";
+			Query query = session.createQuery(hql);
+			query.setParameter("category",category);
+			products = (Products) query.getSingleResult();
+			return products;
+
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 	public boolean checkSubcategorybyname(String name) {
 		Subcategory subcategory;
 		try (Session session = sessionFactory.openSession()) {
@@ -200,6 +215,38 @@ public class HibernateUtils {
 		query.setParameter("name",name);
 		subcategory = (Subcategory) query.getSingleResult();
 			return subcategory;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	public Product_subcategory getPsubByproductid(Integer pid) {
+		Product_subcategory product_subcategory;
+		try (Session session = sessionFactory.openSession()) {
+		String hql = "FROM Product_subcategory WHERE Products =: pid";
+		Query query = session.createQuery(hql);
+		query.setParameter("pid",pid);
+		product_subcategory = (Product_subcategory) query.getSingleResult();
+			return product_subcategory;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public Products productBystring(String search) {
+		// TODO Auto-generated method stub
+		Products products;
+		try (Session session = sessionFactory.openSession()) {
+			String hql = "FROM Products WHERE Category =: search or Name=: search or subactegory:= search";
+			Query query = session.createQuery(hql);
+			if(query.setParameter("category",search)==null) {
+				if(query.setParameter("name",search)==null) {
+					//query.setParameter("",search)==null)
+				}
+			}
+			products = (Products) query.getSingleResult();
+			return products;
+
 		} catch (Exception e) {
 			throw e;
 		}
