@@ -1,6 +1,6 @@
 package com.example.application.response;
 
-public class ErrorResp {
+public class ErrorResponse {
 	private String err="Some error Occured";
     public String getResult() {
         return err;

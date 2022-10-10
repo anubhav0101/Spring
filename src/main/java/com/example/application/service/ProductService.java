@@ -11,11 +11,11 @@ import com.example.application.abc.HibernateUtils;
 import com.example.application.entity.Product_subcategory;
 import com.example.application.entity.Products;
 import com.example.application.entity.Subcategory;
-import com.example.application.request.AddProductReq;
-import com.example.application.request.Subcategoryreq;
-import com.example.application.request.UpdateProduct;
-import com.example.application.response.Productresp;
-import com.example.application.response.ResultResp;
+import com.example.application.request.AddProductRequest;
+import com.example.application.request.SubcategoryRequest;
+import com.example.application.request.UpdateProductRequest;
+import com.example.application.response.ProductResponse;
+import com.example.application.response.ResultResponse;
 
 @Service
 public class ProductService {
@@ -23,8 +23,8 @@ public class ProductService {
 	@Autowired
 	HibernateUtils hibernate;
 
-	public Productresp addProduct(AddProductReq req) throws IOException {
-		Productresp resp = new Productresp();
+	public ProductResponse addProduct(AddProductRequest req) throws IOException {
+		ProductResponse resp = new ProductResponse();
 		Products p = new Products();
 		Product_subcategory psub = new Product_subcategory();
 		try {
@@ -39,7 +39,7 @@ public class ProductService {
 			p.setPrice(req.getPrice());
 			hibernate.save(p);
 			Subcategory subcat = new Subcategory();
-			Subcategoryreq[] sc = req.getSubcategory();
+			SubcategoryRequest[] sc = req.getSubcategory();
 			for (int i = 0; i < sc.length; i++) {
 				try {
 					if (hibernate.checkSubcategorybyname(sc[i].getName()) == true)
@@ -66,12 +66,12 @@ public class ProductService {
 		return resp;
 	}
 
-	public Productresp updateProduct(UpdateProduct req) throws IOException {
+	public ProductResponse updateProduct(UpdateProductRequest req) throws IOException {
 
-		Productresp resp = new Productresp();
+		ProductResponse resp = new ProductResponse();
 		Products p = new Products();
 		Product_subcategory psub = new Product_subcategory();
-		ResultResp resresp = new ResultResp();
+		ResultResponse resresp = new ResultResponse();
 		try {
 
 			if (hibernate.checkProduct(req.getName()) == true) {
@@ -87,7 +87,7 @@ public class ProductService {
 			p.setPrice(req.getPrice());
 			hibernate.update(p);
 			Subcategory subcat = hibernate.findEntityById(psub, p.getId()).getSubcategory();
-			Subcategoryreq[] sc = req.getSubcategory();
+			SubcategoryRequest[] sc = req.getSubcategory();
 			for (int i = 0; i < sc.length; i++) {
 				try {
 					if (hibernate.checkSubcategorybyname(sc[i].getName()) == true)
@@ -114,8 +114,8 @@ public class ProductService {
 		return resp;
 	}
 
-	public Productresp getProduct(int pid) {
-		Productresp resp = new Productresp();
+	public ProductResponse getProduct(int pid) {
+		ProductResponse resp = new ProductResponse();
 		Products p = new Products();
 		Products product = hibernate.findEntityById(p, pid);
 		resp.setProductid(product.getId());
@@ -127,8 +127,8 @@ public class ProductService {
 		return resp;
 	}
 
-	public Productresp getProductByCategory(String category) {
-		Productresp resp = new Productresp();
+	public ProductResponse getProductByCategory(String category) {
+		ProductResponse resp = new ProductResponse();
 		Products product = hibernate.productByCategory(category);
 		resp.setProductid(product.getId());
 		resp.setName(product.getName());
@@ -141,7 +141,7 @@ public class ProductService {
 
 	public ResponseEntity<?> getProductBySearchString(String search) {
 
-		Productresp resp = new Productresp();
+		ProductResponse resp = new ProductResponse();
 		Products product = hibernate.productBystring(search);
 		resp.setProductid(product.getId());
 		resp.setName(product.getName());
@@ -149,6 +149,6 @@ public class ProductService {
 		resp.setDetails(product.getDetails());
 		resp.setCategory(product.getCategory());
 //			resp.setSubcategory(product.getSubcategory());
-		return new ResponseEntity<Productresp>(resp, HttpStatus.OK);
+		return new ResponseEntity<ProductResponse>(resp, HttpStatus.OK);
 	}
 }

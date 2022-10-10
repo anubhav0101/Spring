@@ -7,14 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import com.example.application.entity.Users;
+import com.example.application.entity.Products;
+
 @Repository
 @Component
-public  interface UserRepo extends JpaRepository<Users,Integer> {
-    ArrayList<Users> findByemail(String email);
-    List<Users> findById(int id);
-    default Users findEntityById(int id) {
-    	return findById(id).get(0);
-    }
+public  interface ProductRepo extends JpaRepository<Products,Integer> {
+    ArrayList<Products> findByName(String email);
+    List<Products> findById(int id);
 }
 

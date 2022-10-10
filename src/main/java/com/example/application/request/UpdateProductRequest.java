@@ -3,7 +3,7 @@ package com.example.application.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties
-public class UpdateProduct {
+public class UpdateProductRequest {
 	
 	private Integer id;
 	public Integer getId() {
@@ -16,7 +16,7 @@ public class UpdateProduct {
 	private String details;
 	private String category;
 	private Integer price;
-	private Subcategoryreq[] subcategory;
+	private SubcategoryRequest[] subcategory;
 	
 	public String getName() {
 		return name;
@@ -42,10 +42,10 @@ public class UpdateProduct {
 	public void setPrice(Integer price) {
 		this.price = price;
 	}
-	public Subcategoryreq[] getSubcategory() {
+	public SubcategoryRequest[] getSubcategory() {
 		return subcategory;
 	}
-	public void setSubcategory(Subcategoryreq[] subcategory) {
+	public void setSubcategory(SubcategoryRequest[] subcategory) {
 		this.subcategory = subcategory;
 	}
 	

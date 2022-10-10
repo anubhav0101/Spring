@@ -3,7 +3,7 @@ package com.example.application.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties 
-public class LogoutReq {
+public class LogoutRequest {
 	
 	private Integer id;
 

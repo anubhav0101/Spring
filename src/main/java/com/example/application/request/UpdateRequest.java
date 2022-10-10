@@ -3,13 +3,13 @@ package com.example.application.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties 
-public class UpdateReq {
+public class UpdateRequest {
 	
 	private  Integer id;
 	private String name;
 	private String email;
 	private Long phone;
-	private AddressReq address;
+	private AddressRequest address;
 
 	
 	public Integer getId() {
@@ -36,10 +36,10 @@ public class UpdateReq {
 	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
-	public AddressReq getAddress() {
+	public AddressRequest getAddress() {
 		return address;
 	}
-	public void setAddress(AddressReq address) {
+	public void setAddress(AddressRequest address) {
 		this.address = address;
 	}
 

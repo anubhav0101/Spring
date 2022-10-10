@@ -3,7 +3,7 @@ package com.example.application.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties 
-public class Loginreq {
+public class LoginRequest {
     public String getEmail() {
         return email;
     }

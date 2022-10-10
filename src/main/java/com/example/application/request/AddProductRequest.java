@@ -3,19 +3,19 @@ package com.example.application.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties
-public class AddProductReq {
+public class AddProductRequest {
 
 	private String name;
 	private String details;
 	private String category;
 	private Integer price;
-	private Subcategoryreq[] subcategory;
+	private SubcategoryRequest[] subcategory;
 	
 	
-	public Subcategoryreq[] getSubcategory() {
+	public SubcategoryRequest[] getSubcategory() {
 		return subcategory;
 	}
-	public void setSubcategory(Subcategoryreq[] subcategory) {
+	public void setSubcategory(SubcategoryRequest[] subcategory) {
 		this.subcategory = subcategory;
 	}
 	public String getName() {

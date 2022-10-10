@@ -3,17 +3,17 @@ package com.example.application.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties 
-public class Signup {
+public class SignUpRequest {
 private String name;
 private String email;
 private String password;
 private Long Phone;
-private AddressReq address;
+private AddressRequest address;
 
-public AddressReq getAddress() {
+public AddressRequest getAddress() {
 	return address;
 }
-public void setAddress(AddressReq address) {
+public void setAddress(AddressRequest address) {
 	this.address = address;
 }
 public Long getPhone() {

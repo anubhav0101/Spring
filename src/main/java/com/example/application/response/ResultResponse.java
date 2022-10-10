@@ -1,6 +1,6 @@
 package com.example.application.response;
 
-public class ResultResp {
+public class ResultResponse {
     private String result;
     
      

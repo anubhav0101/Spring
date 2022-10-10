@@ -12,13 +12,10 @@ import com.example.application.entity.Users;
 public class UserRepoImp {
     @Autowired
     UserRepo userR;
-    public boolean checkMail(String s){
+    public boolean checkUser(String s){
         ArrayList<Users> u =userR.findByemail(s);
         Integer size=u.size();
-        if(size>0)
-            return false;
-        else
-        return true;
+      return size>0;
     }
     public List<Users> findByemail(String s){
         return userR.findByemail(s);
@@ -30,12 +27,7 @@ public class UserRepoImp {
     	userR.saveAndFlush(u);
     }
     
-    public boolean checkUser(String s){
-        List<Users> u =findByemail(s);
-        if(u==null)
-            return false;
-        return true;
-    }
+    
     public Users findUserByEmail(String s){
         Users u = findByemail(s).get(0);
         return u;

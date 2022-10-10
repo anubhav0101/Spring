@@ -1,7 +1,7 @@
 package com.example.application.response;
 
 
-public class SignupResp {
+public class SignupResponse {
 
 	private Integer id;
 	private String message;

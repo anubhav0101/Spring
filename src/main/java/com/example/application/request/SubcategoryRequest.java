@@ -3,7 +3,7 @@ package com.example.application.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties
-public class Subcategoryreq {
+public class SubcategoryRequest {
 
 //	private int id;
 	private String name;

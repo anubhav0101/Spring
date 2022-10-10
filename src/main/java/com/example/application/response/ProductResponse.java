@@ -2,16 +2,16 @@ package com.example.application.response;
 
 import java.util.List;
 
-import com.example.application.request.Subcategoryreq;
+import com.example.application.request.SubcategoryRequest;
 
-public class Productresp {
+public class ProductResponse {
 
 	private Integer productid;
 	private String name;
 	private Integer price;
 	private String details;
 	private String category;
-	private Subcategoryreq[] subcategory;
+	private SubcategoryRequest[] subcategory;
 	public Integer getProductid() {
 		return productid;
 	}
@@ -42,10 +42,10 @@ public class Productresp {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	public Subcategoryreq[] getSubcategory() {
+	public SubcategoryRequest[] getSubcategory() {
 		return subcategory;
 	}
-	public void setSubcategory(Subcategoryreq[] subcategory) {
+	public void setSubcategory(SubcategoryRequest[] subcategory) {
 		this.subcategory = subcategory;
 	}
 }
