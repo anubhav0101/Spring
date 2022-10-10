@@ -11,28 +11,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.application.dao.HibernateUtils;
+import com.example.application.abc.HibernateUtils;
 import com.example.application.request.Loginreq;
 import com.example.application.request.LogoutReq;
 import com.example.application.request.Signup;
 import com.example.application.request.UpdateReq;
 import com.example.application.response.ErrorResp;
-import com.example.application.response.LogoutResp;
 import com.example.application.response.ProfileResponse;
 import com.example.application.response.ResultResp;
 import com.example.application.response.SignupResp;
-import com.example.application.response.UpdateResp;
-import com.example.application.service.PageService;
+import com.example.application.service.UserService;
 
 @RestController
 @RequestMapping
 public class UserController {
 
 	@Autowired
-	HibernateUtils hibernate;
-
-	@Autowired
-	PageService pageService;
+	UserService pageService;
 	ErrorResp errresp = new ErrorResp();
 
 	@PostMapping("/login")
@@ -69,8 +64,8 @@ public class UserController {
 
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(@RequestBody LogoutReq req) {
-		LogoutResp logoutResp = pageService.logout(req);
-		return new ResponseEntity<LogoutResp>(logoutResp, HttpStatus.OK);
+		ResultResp res = pageService.logout(req);
+		return new ResponseEntity<ResultResp>(res, HttpStatus.OK);
 	}
 
 	@PostMapping("/getProfile/{id}")
@@ -91,10 +86,11 @@ public class UserController {
 			return new ResponseEntity<ErrorResp>(errresp, HttpStatus.BAD_REQUEST);
 		}
 		try {
-			UpdateResp upresp = pageService.updateProfile(upreq);
-			return new ResponseEntity<UpdateResp>(upresp, HttpStatus.OK);
+			ResultResp resp = pageService.updateProfile(upreq);
+			return new ResponseEntity<ResultResp>(resp, HttpStatus.OK);
 		} catch (IOException e) {
 			return new ResponseEntity<ErrorResp>(errresp, HttpStatus.CONFLICT);
 		}
 	}
+
 }

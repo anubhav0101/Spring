@@ -1,4 +1,4 @@
-package com.example.application.dao;
+package com.example.application.abc;
 import java.io.Serializable;
 import java.util.List;
 

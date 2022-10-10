@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.example.application.request.Subcategoryreq;
 
-public class AddProductresp {
+public class Productresp {
 
 	private Integer productid;
 	private String name;
@@ -48,6 +48,4 @@ public class AddProductresp {
 	public void setSubcategory(Subcategoryreq[] subcategory) {
 		this.subcategory = subcategory;
 	}
-	
-	
 }

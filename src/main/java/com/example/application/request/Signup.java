@@ -13,7 +13,6 @@ private AddressReq address;
 public AddressReq getAddress() {
 	return address;
 }
-
 public void setAddress(AddressReq address) {
 	this.address = address;
 }
@@ -29,7 +28,6 @@ public String getName() {
 public void setName(String name) {
 	this.name = name;
 }
-
 public String getEmail() {
 	return email;
 }
