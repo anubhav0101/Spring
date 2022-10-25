@@ -7,12 +7,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="address")
 public class Address {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@JsonIgnore
 	@Column(name = "id")
 	private Integer id;
 	@Column(name = "street")

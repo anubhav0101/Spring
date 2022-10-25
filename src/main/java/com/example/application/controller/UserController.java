@@ -9,19 +9,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.application.entity.Users;
+import com.example.application.exception.NoUserException;
+import com.example.application.exception.UserAlreadyExistsException;
+import com.example.application.exception.WrongPasswordException;
 import com.example.application.request.DeleteRequest;
 import com.example.application.request.LoginRequest;
 import com.example.application.request.LogoutRequest;
 import com.example.application.request.SignUpRequest;
-import com.example.application.request.UpdateRequest;
-import com.example.application.response.ErrorResponse;
-import com.example.application.response.ProfileResponse;
 import com.example.application.response.ResultResponse;
 import com.example.application.response.SignupResponse;
 import com.example.application.service.UserService;
-import com.example.application.service.exception.NoUserException;
-import com.example.application.service.exception.UserAlreadyExistsException;
-import com.example.application.service.exception.WrongPasswordException;
 
 @RestController
 @RequestMapping
@@ -29,14 +27,14 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
-	ErrorResponse errorResp = new ErrorResponse();
+	
+	ResultResponse resultResponse = new ResultResponse();
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest req) {
 		if (req.getEmail() == null || req.getPassword() == null) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.BAD_REQUEST);
 		}
-		ResultResponse resultResponse = new ResultResponse();
 		try {
 			userService.login(req);
 			resultResponse.setResult("Succesfully logged in");
@@ -48,7 +46,7 @@ public class UserController {
 			resultResponse.setResult("No such user exists");
 			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.BAD_REQUEST);
 		}catch (Exception e) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
@@ -56,7 +54,7 @@ public class UserController {
 	@PostMapping("/signup")
 	public ResponseEntity<?> Signup(@RequestBody SignUpRequest req) {
 		if (req.getEmail() == null || req.getPassword() == null) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.BAD_REQUEST);
 		}
 		SignupResponse signUpResp = new SignupResponse();
 		try {
@@ -65,72 +63,74 @@ public class UserController {
 			signUpResp.setMessage("User Created");
 			return new ResponseEntity<SignupResponse>(signUpResp, HttpStatus.OK);
 		} catch (UserAlreadyExistsException e) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.CONFLICT);
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.CONFLICT);
 		} catch (Exception e) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@PostMapping("/delete")
 	public ResponseEntity<?> delete(@RequestBody DeleteRequest req) {
 		if (req.getId() == null) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.BAD_REQUEST);
 		}
-		ResultResponse resultResp =new ResultResponse();
 		try {
 			userService.delete(req);
-			return new ResponseEntity<ResultResponse>(resultResp, HttpStatus.OK);
+			resultResponse.setResult("Deleted");
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.OK);
 		} catch (NoUserException e) {
-			resultResp.setResult("No such user exists");
-			return new ResponseEntity<ResultResponse>(resultResp, HttpStatus.BAD_REQUEST);
+			resultResponse.setResult("No such user exists");
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 	}
 
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(@RequestBody LogoutRequest req) {
-		ResultResponse resultResp =new ResultResponse();
+		if (req.getId() == null) {
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.BAD_REQUEST);
+		}
 		try{userService.logout(req);
-		return new ResponseEntity<ResultResponse>(resultResp, HttpStatus.OK);}
+		resultResponse.setResult("Logout Done");
+		return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.OK);}
 		catch(NoUserException e){
-			
-			resultResp.setResult("No such user exists");
-			return new ResponseEntity<ResultResponse>(resultResp, HttpStatus.BAD_REQUEST);
+			resultResponse.setResult("No such user exists");
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.BAD_REQUEST);
 		}
 		catch (Exception e) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@PostMapping("/getProfile/{id}")
 	public ResponseEntity<?> getprofile(@PathVariable() int id) {
 		try {
-			ProfileResponse pf = userService.getprofileById(id);
-			return new ResponseEntity<ProfileResponse>(pf, HttpStatus.OK);
+			Users user= userService.getprofileById(id);
+			return new ResponseEntity<Users>(user, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.BAD_REQUEST);
 		}
 
 	}
 
 	@PostMapping("/updateProfile")
-	public ResponseEntity<?> update(@RequestBody UpdateRequest upreq) {
+	public ResponseEntity<?> update(@RequestBody Users upreq) {
 
 		if (upreq.getId() == null) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.BAD_REQUEST);
-		}ResultResponse resp=new ResultResponse();
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.BAD_REQUEST);}
 		try {
 			userService.updateProfile(upreq);
-			resp.setResult("Updated");
-			return new ResponseEntity<ResultResponse>(resp, HttpStatus.OK);
+			resultResponse.setResult("Updated");
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.OK);
 		} catch (UserAlreadyExistsException e) {
-			resp.setResult("User Already exists");
-			return new ResponseEntity<ResultResponse>(resp, HttpStatus.OK);
+			resultResponse.setResult("User Already exists");
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<ErrorResponse>(errorResp, HttpStatus.INTERNAL_SERVER_ERROR);
+			System.out.println(e);
+			return new ResponseEntity<ResultResponse>(resultResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	}
 
-}

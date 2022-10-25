@@ -1,7 +1,7 @@
 package com.example.application.response;
 
 public class ResultResponse {
-    private String result;
+    private String result="Some error Occured";
     
      
     public String getResult() {

@@ -1,41 +1,31 @@
 package com.example.application.service;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.application.Repo.AddressRepo;
 import com.example.application.Repo.UserRepo;
-import com.example.application.Repo.Imp.AddressRepoImp;
-import com.example.application.Repo.Imp.UserRepoImp;
 import com.example.application.entity.Address;
 import com.example.application.entity.Users;
+import com.example.application.exception.NoUserException;
+import com.example.application.exception.UserAlreadyExistsException;
+import com.example.application.exception.WrongPasswordException;
 import com.example.application.request.DeleteRequest;
 import com.example.application.request.LoginRequest;
 import com.example.application.request.LogoutRequest;
 import com.example.application.request.SignUpRequest;
-import com.example.application.request.UpdateRequest;
-import com.example.application.response.ProfileResponse;
-import com.example.application.service.exception.NoUserException;
-import com.example.application.service.exception.UserAlreadyExistsException;
-import com.example.application.service.exception.WrongPasswordException;
 
 @Service
 public class UserService {
 	@Autowired
 	UserRepo userR;
 	@Autowired
-	UserRepoImp userRepoImp;
-	@Autowired
-	AddressRepoImp addressRepoImp;
-	@Autowired
 	AddressRepo addressRepo;
 
 	public void login(LoginRequest req) throws Exception {
 		String email = req.getEmail();
-		if (userR.findByemail(email) != null) {
-			Users user = userR.findByemail(email).get(0);
+		if (userR.existsByEmail(email)) {
+			Users user = userR.findByEmail(email).get(0);
 			if (user.getPassword().equals(req.getPassword())) {
 				return;
 			} else {
@@ -44,7 +34,6 @@ public class UserService {
 		} else {
 			throw new NoUserException();
 		}
-
 	}
 
 	public Integer signup(SignUpRequest req) throws Exception {
@@ -59,7 +48,7 @@ public class UserService {
 		a.setStreet(req.getAddress().getStreet());
 		a.setPincode(req.getAddress().getPin());
 
-		if (userR.findByemail(req.getEmail())!= null) {
+		if (userR.existsByEmail(req.getEmail())) {
 			throw new UserAlreadyExistsException();
 		} else {
 			addressRepo.save(a);
@@ -70,35 +59,29 @@ public class UserService {
 	}
 
 	public void delete(DeleteRequest req) throws Exception {
-		if ((userR.findById(req.getId()) == null)) {
+		if (!userR.existsById(req.getId())) {
 			throw new NoUserException();
 		} else
-			userRepoImp.delete(req.getId());
+			userR.deleteById(req.getId());
 	}
 
 	public void logout(LogoutRequest req) throws Exception {
-		if ((userR.findById(req.getId()) == null)) {
+		if (!userR.existsById(req.getId())) {
 			throw new NoUserException();
 		}
 	}
 
-	public ProfileResponse getprofileById(Integer id) {
-		Users prof = userR.findEntityById(id);
-		ProfileResponse pf = new ProfileResponse();
-		pf.setId(prof.getId());
-		pf.setName(prof.getName());
-		pf.setEmail(prof.getEmail());	
-		pf.setPhone(prof.getPhone());
-		pf.setAddress(prof.getAddress());
-		return pf;
+	public Users getprofileById(Integer id) {
+		Users profile = userR.findEntityById(id);
+		return profile;
 	}
 
-	public void updateProfile(UpdateRequest upreq) throws Exception {
+	public void updateProfile(Users upreq) throws Exception {
 		Users u = new Users();
 		u.setId(upreq.getId());
-		Users ur = userRepoImp.findEntityById(upreq.getId());
+		Users ur = userR.findEntityById(upreq.getId());
 		u.setName(upreq.getName());
-		if (userRepoImp.checkUser(upreq.getEmail())|| userRepoImp.findEntityById(upreq.getId()) == null) {
+		if (userR.existsByEmail(upreq.getEmail())) {
 			throw new UserAlreadyExistsException();
 		} else {
 			u.setEmail(upreq.getEmail());
@@ -108,11 +91,11 @@ public class UserService {
 			ad.setId(ur.getAddress().getId());
 			ad.setCity(upreq.getAddress().getCity());
 			ad.setState(upreq.getAddress().getState());
-			ad.setPincode(upreq.getAddress().getPin());
+			ad.setPincode(upreq.getAddress().getPincode());
 			ad.setStreet(upreq.getAddress().getStreet());
-			addressRepoImp.updateAddress(ad);
+			addressRepo.save(ad);
 			u.setAddress(ad);
-			userRepoImp.updateUser(u);
+			userR.save(u);
 		}
 	}
 }

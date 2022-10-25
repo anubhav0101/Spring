@@ -1,15 +1,18 @@
 package com.example.application.entity;
 
-import javax.annotation.Generated;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -23,7 +26,20 @@ public class Products {
 	private String details;
 	private Integer price;
 	private String name;
-		
+	
+	@ManyToMany
+	@JoinTable(
+	 name = "pd_subcat", 
+	 joinColumns = @JoinColumn(name = "pid"), 
+	 inverseJoinColumns = @JoinColumn(name = "subcatid"))
+	 private Set<Subcategory> subcategory = new HashSet<>();
+
+	public Set<Subcategory> getSubcategory() {
+		return subcategory;
+	}
+	public void setSubcategory(Set<Subcategory> subcategory) {
+		this.subcategory = subcategory;
+	}
 	public Integer getPrice() {
 		return price;
 	}

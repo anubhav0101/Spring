@@ -1,5 +1,8 @@
 package com.example.application.request;
 
+import java.util.List;
+
+import com.example.application.entity.Subcategory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties
@@ -9,14 +12,13 @@ public class AddProductRequest {
 	private String details;
 	private String category;
 	private Integer price;
-	private SubcategoryRequest[] subcategory;
+	private List<Subcategory> subCategory;
 	
-	
-	public SubcategoryRequest[] getSubcategory() {
-		return subcategory;
+	public List<Subcategory> getSubCategory() {
+		return subCategory;
 	}
-	public void setSubcategory(SubcategoryRequest[] subcategory) {
-		this.subcategory = subcategory;
+	public void setSubCategory(List<Subcategory> subCategory) {
+		this.subCategory = subCategory;
 	}
 	public String getName() {
 		return name;

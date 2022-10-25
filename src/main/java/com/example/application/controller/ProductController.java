@@ -1,5 +1,10 @@
 package com.example.application.controller;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,55 +15,85 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.application.abc.HibernateUtils;
+import com.example.application.entity.Products;
+import com.example.application.entity.Subcategory;
+import com.example.application.exception.ProductAlreadyExistsException;
 import com.example.application.request.AddProductRequest;
+import com.example.application.request.SubcategoryRequest;
 import com.example.application.request.UpdateProductRequest;
-import com.example.application.response.ProductResponse;
-import com.example.application.response.ErrorResponse;
+import com.example.application.response.ResultResponse;
 import com.example.application.service.ProductService;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-	@Autowired
-	HibernateUtils hibernate;
-	ErrorResponse errresp = new ErrorResponse();
+
 	@Autowired
 	ProductService productService;
+	ResultResponse response=new ResultResponse();
+
 	@PostMapping("/AddProduct")
 	public ResponseEntity<?> addproduct(@RequestBody AddProductRequest req) {
-		try{ProductResponse resp = productService.addProduct(req);
-		return new ResponseEntity<ProductResponse>(resp,HttpStatus.OK);}
-		catch (IOException e) {
-			return new ResponseEntity<ErrorResponse>(errresp, HttpStatus.CONFLICT);
+		try {
+			Products p = productService.addProduct(req);
+			return new ResponseEntity<Products>(p, HttpStatus.OK);
+		} catch (ProductAlreadyExistsException e) {
+			response.setResult("Product Already exists");
+			return new ResponseEntity<ResultResponse>(response, HttpStatus.CONFLICT);
+		} catch (Exception e) {
+			return new ResponseEntity<ResultResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 	@PostMapping("/update")
 	public ResponseEntity<?> updateProduct(@RequestBody UpdateProductRequest req) {
-		if(req.getId()==null) {
-			return new ResponseEntity<ErrorResponse>(errresp, HttpStatus.BAD_REQUEST);
+		if (req.getId() == null) {
+			return new ResponseEntity<ResultResponse>(response, HttpStatus.BAD_REQUEST);
 		}
-		ProductResponse resp;
 		try {
-			resp = productService.updateProduct(req);
-			return new ResponseEntity<ProductResponse>(resp, HttpStatus.OK);
-		} 
-		catch (IOException e) {
-			return new ResponseEntity<ErrorResponse>(errresp, HttpStatus.CONFLICT);
+			Products p = productService.updateProduct(req);
+			return new ResponseEntity<Products>(p, HttpStatus.OK);
+		}  catch (ProductAlreadyExistsException e) {
+			response.setResult("Product Already exists");
+			return new ResponseEntity<ResultResponse>(response, HttpStatus.CONFLICT);
+		} catch (Exception e) {
+			return new ResponseEntity<ResultResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+//
 	@GetMapping("/getById/{id}")
 	public ResponseEntity<?> getProduct(@PathVariable() int id) {
-		try{
-			ProductResponse resp= productService.getProduct(id);
-			return new ResponseEntity<ProductResponse>(resp, HttpStatus.OK);}
-		catch(Exception e) {
-			return new ResponseEntity<ErrorResponse>(errresp, HttpStatus.NOT_FOUND);
+		try {
+			Products products = productService.getProduct(id);
+			return new ResponseEntity<Products>(products, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ResultResponse>(response, HttpStatus.NOT_FOUND);
 		}
 	}
+
 	@GetMapping("/{category}")
 	public ResponseEntity<?> getProductBycategory(@PathVariable() String category) {
-		ProductResponse resp= productService.getProductByCategory(category);
-		return new ResponseEntity<ProductResponse>(resp, HttpStatus.OK);
+		
+		try {
+			List<Products> products = productService.getProductByCategory(category);
+			return new ResponseEntity<List<Products>>(products, HttpStatus.OK);
+		}
+		catch (ProductAlreadyExistsException e) {
+			response.setResult("Such Product doesnot exists");
+			return new ResponseEntity<ResultResponse>(response, HttpStatus.CONFLICT);
+		} catch (Exception e) {
+			return new ResponseEntity<ResultResponse>(response, HttpStatus.NOT_FOUND);
+		}
 	}
+	@GetMapping("/search/{searchString}")
+	public ResponseEntity<?> searchString(@PathVariable() String searchString) {
+		 List<Products> products= productService.searchString(searchString);
+		 return new ResponseEntity<List<Products>>(products,HttpStatus.OK);
+	}
+	
+//	@PostMapping("/{category}/getFilteredProducts")
+//	public ResponseEntity<?> filter(@PathVariable() String category,@RequestBody FilterReq req) {
+//		 List<Products> products= productService.searchString(searchString);
+//		 return new ResponseEntity<List<Products>>(products,HttpStatus.OK);
+//	}
 }

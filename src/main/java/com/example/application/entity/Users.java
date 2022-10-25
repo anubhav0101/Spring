@@ -10,6 +10,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="users")
 public class Users {
@@ -25,6 +27,7 @@ public class Users {
 	@Column(name="phone")
 	private Long phone;
 	@NotNull
+	@JsonIgnore
 	private String password;
 	@OneToOne
 	@JoinColumn(name="address")
